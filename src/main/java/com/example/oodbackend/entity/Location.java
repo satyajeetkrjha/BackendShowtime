@@ -28,7 +28,7 @@ public class Location {
     private Long locationId;
 
 
-    @NotBlank(message = "Please Add Department name ")
+    @NotBlank(message = "Please Add Location name ")
     @Length(max =100 ,min =1)
     private String locationName ;
 

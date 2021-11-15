@@ -35,6 +35,7 @@ public class User {
     private boolean status ;
 
 
+    // Each user is going to be mapped to a Location
     @OneToOne
     @JoinColumn(
             name = "location_id",
