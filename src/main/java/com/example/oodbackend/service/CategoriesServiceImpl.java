@@ -18,4 +18,10 @@ public class CategoriesServiceImpl implements CategoriesService{
     public List <Categories> fetchCategoryList(){
         return categoriesRepository.findAll();
     }
+
+    @Override
+    public Categories fetchCategoryById(Long categoryId) {
+      Optional<Categories> category = categoriesRepository.findById(categoryId);
+      return category.get();
+    }
 }

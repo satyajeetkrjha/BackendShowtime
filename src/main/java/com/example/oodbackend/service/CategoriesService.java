@@ -8,4 +8,6 @@ import java.util.List;
 public interface CategoriesService {
 
     public List<Categories> fetchCategoryList();
+
+    public Categories fetchCategoryById(Long categoryId);
 }
