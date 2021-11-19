@@ -31,9 +31,7 @@ public class User {
 
     private Instant createdAt;
 
-
     private boolean status ;
-
 
     // Each user is going to be mapped to a Location
     @OneToOne
