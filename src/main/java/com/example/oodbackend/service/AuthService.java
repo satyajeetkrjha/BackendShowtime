@@ -5,6 +5,7 @@ import static java.time.Instant.now;
 
 import com.example.oodbackend.entity.NotificationEmail;
 import com.example.oodbackend.entity.VerificationToken;
+import com.example.oodbackend.exceptions.SpringBootException;
 import com.example.oodbackend.repository.UserRepository;
 import com.example.oodbackend.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.oodbackend.entity.User;
 import com.example.oodbackend.entity.Location;
+
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -62,5 +65,16 @@ public class AuthService {
 
         verificationTokenRepository.save(verificationToken);
         return token;
+    }
+    private void fetchUserAndEnable(VerificationToken verificationToken) {
+        Long userId = verificationToken.getUser().getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new SpringBootException("User not found with name - " + userId));
+        user.setStatus(true);
+        userRepository.save(user);
+    }
+
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        fetchUserAndEnable(verificationToken.orElseThrow(() -> new SpringBootException("Invalid Token")));
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Data
@@ -45,6 +46,7 @@ public class User {
             name = "location_id",
             referencedColumnName = "locationId"
     )
+    @NotNull
     private Location location ;
 
 
