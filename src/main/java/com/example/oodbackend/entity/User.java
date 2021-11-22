@@ -2,6 +2,9 @@ package com.example.oodbackend.entity;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.GeneratedValue;
@@ -11,6 +14,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User {
 
@@ -34,7 +40,7 @@ public class User {
     private boolean status ;
 
     // Each user is going to be mapped to a Location
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "location_id",
             referencedColumnName = "locationId"

@@ -30,6 +30,9 @@ public class AuthService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private LocationService locationService;
+
     @Transactional
     public void signup(RegisterRequest registerRequest) {
 
@@ -40,7 +43,8 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setCreatedAt(now());
         user.setStatus(false);
-        //Location location = locationService.fetchLocationById(registerRequest.getLocationId());
+        Location location = locationService.fetchLocationById(registerRequest.getLocationId());
+        user.setLocation(location);
         userRepository.save(user);
 
         String token = generateVerificationToken(user);
