@@ -29,10 +29,4 @@ public class CategoriesController {
         return categoriesService.fetchCategoryById(categoryId);
     }
 
-
-
-
-
-
-
 }

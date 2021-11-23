@@ -1,6 +1,7 @@
 package com.example.oodbackend.service;
 
 import com.example.oodbackend.entity.NotificationEmail;
+import com.example.oodbackend.exceptions.SpringBootException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
@@ -32,7 +33,7 @@ public class MailService {
             log.info("Activation email sent!!");
         } catch (MailException e) {
             log.error("Exception occurred when sending mail", e);
-            //throw new SpringRedditException("Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
+            throw new SpringBootException("Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
         }
     }
 }

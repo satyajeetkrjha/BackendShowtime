@@ -13,11 +13,16 @@ import java.util.Optional;
 @Service
 public class LocationServiceImpl implements LocationService {
     @Autowired
-    private LocationRepository locationRepositoryy;
+    private LocationRepository locationRepository;
 
     @Override
     public Location fetchLocationById(Long locationId) {
-        Optional<Location> location = locationRepositoryy.findById(locationId);
+        Optional<Location> location = locationRepository.findById(locationId);
         return location.get();
+    }
+
+    @Override
+    public Location saveLocation(Location location) {
+        return locationRepository.save(location);
     }
 }

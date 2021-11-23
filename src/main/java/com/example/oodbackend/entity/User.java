@@ -25,12 +25,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
 
+   @NotBlank(message = "username can't be blank")
+    private String username;
+
     private String firstName;
 
     private String lastName;
 
     @Email
     @NotEmpty(message = "Email is required")
+    @Column(unique=true)
     private String email;
 
     @NotBlank(message = "Password is required")

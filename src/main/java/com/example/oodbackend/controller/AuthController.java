@@ -1,5 +1,7 @@
 package com.example.oodbackend.controller;
 
+import com.example.oodbackend.dto.AuthenticationResponse;
+import com.example.oodbackend.dto.LoginRequest;
 import com.example.oodbackend.dto.RegisterRequest;
 import com.example.oodbackend.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,11 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successfully", OK);
+    }
+
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 
 
