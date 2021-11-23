@@ -3,6 +3,7 @@ package com.example.oodbackend.service;
 import com.example.oodbackend.Security.JwtProvider;
 import com.example.oodbackend.dto.AuthenticationResponse;
 import com.example.oodbackend.dto.LoginRequest;
+import com.example.oodbackend.dto.RefreshTokenRequest;
 import com.example.oodbackend.dto.RegisterRequest;
 import static java.time.Instant.now;
 
@@ -50,6 +51,9 @@ public class AuthService {
 
     @Autowired
     private  JwtProvider jwtProvider;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
 
     @Transactional
@@ -100,7 +104,24 @@ public class AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token,loginRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
 
     }
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
+    }
+
+
 }
