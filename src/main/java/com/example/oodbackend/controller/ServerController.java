@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-public class HelloController {
+public class ServerController {
     @GetMapping("/server")
     public String helloworld(){
         return "Server is Running !";

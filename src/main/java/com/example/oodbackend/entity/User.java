@@ -14,11 +14,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
@@ -52,6 +55,17 @@ public class User {
     )
     @NotNull
     private Location location ;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_categories",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "userId",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "category_id", referencedColumnName = "categoryId",
+                            nullable = false, updatable = false)})
+    private Set <Categories> categories = new HashSet<>();
 
 
     public Long getUserId() {
