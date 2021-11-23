@@ -1,9 +1,7 @@
 package com.example.oodbackend.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 
@@ -34,7 +32,9 @@ public class Categories {
     @Length(max=500,min=2)
     private String categoryDescription;
 
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
     public Categories() {

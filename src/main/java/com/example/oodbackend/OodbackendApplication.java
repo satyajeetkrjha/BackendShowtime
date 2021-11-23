@@ -27,11 +27,21 @@ public class OodbackendApplication {
 	public CommandLineRunner mappingDemo(CategoriesRepository categoriesRepository,
 										 UserRepository userRepository) {
 		return args -> {
-            Long categoryId = Long.valueOf(1);
-			Optional<Categories> category1 =categoriesRepository.findById(categoryId);
+
+            Long categoryId = Long.valueOf(6);
+			Categories category1 =categoriesRepository.findById(categoryId).get();
+
 
 			Long userId = Long.valueOf(3);
-			Optional<User> user1 = userRepository.findById(userId);
+			User user1 = userRepository.findById(userId).get();
+
+
+			System.out.println(category1);
+			System.out.println(user1);
+
+
+			user1.getCategories().add(category1);
+			userRepository.save(user1);
 
 
 

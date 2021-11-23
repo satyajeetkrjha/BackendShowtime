@@ -24,4 +24,9 @@ public class CategoriesServiceImpl implements CategoriesService{
       Optional<Categories> category = categoriesRepository.findById(categoryId);
       return category.get();
     }
+
+    @Override
+    public Categories savecategory(Categories categories){
+        return categoriesRepository.save(categories);
+    }
 }

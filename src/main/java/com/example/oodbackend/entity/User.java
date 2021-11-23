@@ -2,9 +2,7 @@ package com.example.oodbackend.entity;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.GeneratedValue;
@@ -57,7 +55,9 @@ public class User {
     private Location location ;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_categories",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "userId",
