@@ -56,5 +56,28 @@ public class JwtProvider {
             throw new SpringBootException("Exception occured while retrieving public key from keystore", e);
         }
     }
+    private PublicKey getPublickey() {
+        try {
+            return keyStore.getCertificate("springblog").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new SpringBootException("Exception occured while " +
+                    "retrieving public key from keystore", e);
+        }
+    }
+    public boolean validateToken(String jwt) {
+        parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
+        return true;
+    }
 
+
+
+
+    public String getUsernameFromJWT(String token) {
+        Claims claims = parser()
+                .setSigningKey(getPublickey())
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 }
