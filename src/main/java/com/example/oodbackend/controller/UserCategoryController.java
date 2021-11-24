@@ -1,6 +1,7 @@
 package com.example.oodbackend.controller;
 
 import com.example.oodbackend.dto.UserCategoryRequest;
+import com.example.oodbackend.dto.UserCategoryResponse;
 import com.example.oodbackend.entity.User;
 import com.example.oodbackend.service.UserCategoryService;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class UserCategoryController {
 
 
     @GetMapping("/getusercategories/{id}")
-    public List<Long> getUserByCategory(@PathVariable("id") Long  categoryId){
+    public List<UserCategoryResponse> getUserByCategory(@PathVariable("id") Long  categoryId){
        return userCategoryService.getUserByCategory(categoryId);
     }
 

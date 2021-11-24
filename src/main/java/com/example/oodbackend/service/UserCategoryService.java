@@ -2,6 +2,7 @@ package com.example.oodbackend.service;
 
 
 import com.example.oodbackend.dto.UserCategoryRequest;
+import com.example.oodbackend.dto.UserCategoryResponse;
 import com.example.oodbackend.entity.Categories;
 import com.example.oodbackend.entity.User;
 import com.example.oodbackend.repository.CategoriesRepository;
@@ -31,14 +32,18 @@ public class UserCategoryService {
         return "User Category saved properly";
     }
 
-    public List <Long> getUserByCategory(Long categoryId) {
+    public List <UserCategoryResponse> getUserByCategory(Long categoryId) {
         Categories category1 = categoriesRepository.findById(categoryId).orElse(null);
           Set <User> users = category1.getUsers();
-        List <Long> temp = new ArrayList<>();
+        List <UserCategoryResponse> temp = new ArrayList<>();
           for(User user :users) {
-              System.out.println(user.getUserId());
-              User tempuser = userRepository.findById(user.getUserId()).get();
-              temp.add(user.getUserId());
+              UserCategoryResponse userCategoryResponse = new UserCategoryResponse();
+              userCategoryResponse.setUserId(user.getUserId());
+              userCategoryResponse.setUsername(user.getUsername());
+              userCategoryResponse.setFirstName(user.getFirstName());
+              userCategoryResponse.setLastName(user.getLastName());
+
+              temp.add(userCategoryResponse);
 
           }
           System.out.print(temp);
