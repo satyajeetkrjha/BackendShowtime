@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import com.example.oodbackend.entity.Categories;
 
 @Data
 @AllArgsConstructor
@@ -25,6 +26,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
+
+
+
 
    @NotBlank(message = "username can't be blank")
     private String username;
@@ -55,6 +59,7 @@ public class User {
     private Location location ;
 
 
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -66,6 +71,7 @@ public class User {
                     @JoinColumn(name = "category_id", referencedColumnName = "categoryId",
                             nullable = false, updatable = false)})
     private Set <Categories> categories = new HashSet<>();
+
 
 
     public Long getUserId() {

@@ -1,17 +1,14 @@
 package com.example.oodbackend.controller;
 
 import com.example.oodbackend.dto.UserCategoryRequest;
-import com.example.oodbackend.entity.Location;
+import com.example.oodbackend.entity.User;
 import com.example.oodbackend.service.UserCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+import java.util.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/showtime")
@@ -25,6 +22,12 @@ public class UserCategoryController {
     public String saveUserCategory(@Valid @RequestBody UserCategoryRequest userCategoryRequest){
 
         return userCategoryService.saveUserCategory(userCategoryRequest);
+    }
+
+
+    @GetMapping("/getusercategories/{id}")
+    public List<Long> getUserByCategory(@PathVariable("id") Long  categoryId){
+       return userCategoryService.getUserByCategory(categoryId);
     }
 
 }

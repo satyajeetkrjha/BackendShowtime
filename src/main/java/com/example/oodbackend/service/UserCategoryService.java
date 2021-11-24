@@ -9,6 +9,11 @@ import com.example.oodbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 @Service
 public class UserCategoryService {
 
@@ -24,5 +29,19 @@ public class UserCategoryService {
         user1.getCategories().add(category1);
         userRepository.save(user1);
         return "User Category saved properly";
+    }
+
+    public List <Long> getUserByCategory(Long categoryId) {
+        Categories category1 = categoriesRepository.findById(categoryId).orElse(null);
+          Set <User> users = category1.getUsers();
+        List <Long> temp = new ArrayList<>();
+          for(User user :users) {
+              System.out.println(user.getUserId());
+              User tempuser = userRepository.findById(user.getUserId()).get();
+              temp.add(user.getUserId());
+
+          }
+          System.out.print(temp);
+        return temp;
     }
 }
