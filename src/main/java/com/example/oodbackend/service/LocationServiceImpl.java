@@ -8,6 +8,7 @@ import com.example.oodbackend.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,12 @@ public class LocationServiceImpl implements LocationService {
     public Location fetchLocationById(Long locationId) {
         Optional<Location> location = locationRepository.findById(locationId);
         return location.get();
+    }
+
+    @Override
+    public List<Location> fetchAllLocations(){
+        List<Location> locations = locationRepository.findAll();
+        return locations;
     }
 
     @Override
