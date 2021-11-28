@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/auth")
