@@ -1,14 +1,19 @@
 package com.example.oodbackend.entity;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Events {
 
@@ -25,29 +30,32 @@ public class Events {
 
     private String eventDescription;
 
-    //many fields
-    // are yet to be added
-    public Long getEventId() {
-        return eventId;
-    }
+    // Each event is going to be mapped to a Location
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "location_id",
+            referencedColumnName = "locationId"
+    )
+    @NotNull
+    private Location location ;
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
 
-    public String getEventName() {
-        return eventName;
-    }
+    @Temporal(TemporalType.DATE)
+    Date eventStartDate;
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
+    @Temporal(TemporalType.DATE)
+    Date eventEndDate;
 
-    public String getEventDescription() {
-        return eventDescription;
-    }
 
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "category_id",
+            referencedColumnName = "categoryId"
+    )
+    @NotNull
+    private Categories categories;
+
+
 }
