@@ -1,16 +1,16 @@
 package com.example.oodbackend.controller;
 
-import com.example.oodbackend.dto.AuthenticationResponse;
-import com.example.oodbackend.dto.LoginRequest;
+import com.example.oodbackend.dto.*;
 
 
-import com.example.oodbackend.dto.RefreshTokenRequest;
-import com.example.oodbackend.dto.RegisterRequest;
 import com.example.oodbackend.service.AuthService;
 import com.example.oodbackend.service.RefreshTokenService;
+import com.example.oodbackend.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,6 +57,11 @@ public class AuthController {
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
+    }
+
+    @GetMapping("/info/{username}")
+    public UserDataResponse getData(@PathVariable String username){
+        return authService.getUserDataByUserName(username);
     }
 
 

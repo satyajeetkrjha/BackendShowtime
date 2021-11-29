@@ -1,10 +1,8 @@
 package com.example.oodbackend.service;
 
 import com.example.oodbackend.Security.JwtProvider;
-import com.example.oodbackend.dto.AuthenticationResponse;
-import com.example.oodbackend.dto.LoginRequest;
-import com.example.oodbackend.dto.RefreshTokenRequest;
-import com.example.oodbackend.dto.RegisterRequest;
+import com.example.oodbackend.dto.*;
+
 import static java.time.Instant.now;
 
 import com.example.oodbackend.entity.NotificationEmail;
@@ -17,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,4 +123,15 @@ public class AuthService {
     }
 
 
+    public UserDataResponse getUserDataByUserName(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userOptional
+                .orElseThrow(() -> new UsernameNotFoundException("No user " +
+                        "Found with username : " + username));
+        UserDataResponse userDataResponse = new UserDataResponse();
+        userDataResponse.setUserId(userOptional.get().getUserId());
+        userDataResponse.setLastName(userOptional.get().getLastName());
+        userDataResponse.setFirstName(userOptional.get().getFirstName());
+        return userDataResponse;
+    }
 }
