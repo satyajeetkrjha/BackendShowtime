@@ -1,16 +1,23 @@
 package com.example.oodbackend.dto;
 
 import com.example.oodbackend.entity.Location;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.*;
 
 
-public class eventLocationResponse {
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class EventLocationResponse {
     private Long eventId;
     private String eventName ;
     private String eventDescription;
-    private Location locationId ;
     Date startDate ;
     Date endDate;
-    private Long categoryId;
+
 
 }
