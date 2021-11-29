@@ -3,6 +3,7 @@ package com.example.oodbackend.controller;
 import com.example.oodbackend.dto.CategoriesResponse;
 import com.example.oodbackend.dto.UserCategoryRequest;
 import com.example.oodbackend.dto.UserCategoryResponse;
+import com.example.oodbackend.entity.Categories;
 import com.example.oodbackend.service.UserCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,10 @@ public class UserCategoryController {
     @GetMapping("/getcategoriesusers/{id}")
     public List <CategoriesResponse> getCategoriesForUser(@PathVariable("id")Long userId){
         return userCategoryService.getCategoriesForUser(userId);
+    }
+    @GetMapping("/categorysuggestions/{id}")
+    public List<CategoriesResponse> getCategoriesSuggestions(@PathVariable("id") Long userId){
+        return userCategoryService.getCategoriesSuggestions(userId);
     }
 
 

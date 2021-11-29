@@ -25,6 +25,10 @@ public class UserCategoryService {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
+    @Autowired
+    private CategoriesService categoriesService;
+
+
     public String saveUserCategory(UserCategoryRequest userCategoryRequest) {
         Categories category1 = categoriesRepository.findById(userCategoryRequest.getCategoryId()).orElse(null);
         User user1 = userRepository.findById(userCategoryRequest.getUserId()).orElse(null);
@@ -61,6 +65,34 @@ public class UserCategoryService {
             categoriesResponse.setCategoryName(item.getCategoryName());
             categoriesResponse.setCategoryDescription(item.getCategoryDescription());
             temp.add(categoriesResponse);
+        }
+        return temp;
+
+    }
+
+    public List<CategoriesResponse> getCategoriesSuggestions(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Set <Categories> categories = user.getCategories();
+        List <Long> CategoryIds = new ArrayList<>() ;
+        for (Categories item :categories){
+            CategoryIds.add(item.getCategoryId());
+        }
+
+        List <Categories> allcategories = categoriesService.fetchCategoryList();
+        List <CategoriesResponse > temp = new ArrayList<>();
+        for (Categories item :allcategories){
+              Long categoryId = item.getCategoryId();
+              if(CategoryIds.contains(categoryId)){
+                  continue;
+              }
+              else{
+                  CategoriesResponse categoriesResponse = new CategoriesResponse();
+                  categoriesResponse.setCategoryId(item.getCategoryId());
+                  categoriesResponse.setCategoryName(item.getCategoryName());
+                  categoriesResponse.setCategoryDescription(item.getCategoryDescription());
+                  temp.add(categoriesResponse);
+              }
+
         }
         return temp;
 
