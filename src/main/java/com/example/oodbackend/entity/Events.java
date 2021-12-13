@@ -1,15 +1,15 @@
 package com.example.oodbackend.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +40,12 @@ public class Events {
     private Location location ;
 
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    private Set<User> users = new HashSet<>();
+
+
     @Temporal(TemporalType.DATE)
     Date eventStartDate;
 
@@ -56,6 +62,7 @@ public class Events {
     )
     @NotNull
     private Categories categories;
+
 
 
 }

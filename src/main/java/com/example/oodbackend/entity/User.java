@@ -74,6 +74,28 @@ public class User {
 
 
 
+
+    //users mapped with events they mark interested
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_events",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "userId",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "event_id", referencedColumnName = "eventId",
+                            nullable = false, updatable = false)})
+    private Set <Events> events = new HashSet<>();
+
+
+
+
+
+
+
+
+
     public Long getUserId() {
         return userId;
     }

@@ -23,20 +23,4 @@ public class OodbackendApplication {
 		SpringApplication.run(OodbackendApplication.class, args);
 	}
 
-	/*
-	@Bean
-	public CommandLineRunner mappingDemo(UserRepository userRepository,
-										 CategoriesRepository categoriesRepository) {
-		return args -> {
-
-			Categories category1 = categoriesRepository.findById(Long.valueOf(6)).orElse(null);
-			category1.getUsers();
-			System.out.println(category1.getUsers());
-
-		};
-	}
-
-	 */
-
-
 }

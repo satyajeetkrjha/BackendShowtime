@@ -132,6 +132,7 @@ public class AuthService {
         userDataResponse.setUserId(userOptional.get().getUserId());
         userDataResponse.setLastName(userOptional.get().getLastName());
         userDataResponse.setFirstName(userOptional.get().getFirstName());
+        userDataResponse.setLocationId(userOptional.get().getLocation().getLocationId());
         return userDataResponse;
     }
 }

@@ -26,8 +26,6 @@ public class Location {
     }
 
 
-
-
     public Long getLocationId() {
         return locationId;
     }
