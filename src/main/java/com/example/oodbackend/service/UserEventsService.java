@@ -1,6 +1,7 @@
 package com.example.oodbackend.service;
 
 
+import com.example.oodbackend.dto.EventsFollowedByAUser;
 import com.example.oodbackend.dto.UserCategoryResponse;
 import com.example.oodbackend.dto.UserEventsResponse;
 import com.example.oodbackend.repository.EventsRepository;
@@ -46,6 +47,22 @@ public class UserEventsService {
             userEventsResponse.setFirstName(user.getFirstName());
             userEventsResponse.setLastName(user.getLastName());
             res.add(userEventsResponse);
+        }
+        return res ;
+
+    }
+
+    public List<EventsFollowedByAUser> getEventsForUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Set <Events> events = user.getEvents();
+        List <EventsFollowedByAUser> res = new ArrayList<>();
+        for(Events event: events){
+            EventsFollowedByAUser eventsFollowedByAUser = new EventsFollowedByAUser();
+            eventsFollowedByAUser.setEventId(event.getEventId());
+            eventsFollowedByAUser.setEventName(event.getEventName());
+            eventsFollowedByAUser.setEventDescription(event.getEventName());
+            res.add(eventsFollowedByAUser);
+
         }
         return res ;
 

@@ -1,6 +1,7 @@
 package com.example.oodbackend.controller;
 
 
+import com.example.oodbackend.dto.EventsFollowedByAUser;
 import com.example.oodbackend.dto.InterestedRequest;
 import com.example.oodbackend.dto.UserCategoryResponse;
 import com.example.oodbackend.dto.UserEventsResponse;
@@ -38,4 +39,15 @@ public class UserEventsController {
     public List<UserEventsResponse> getUserByEvent(@PathVariable("id") Long  eventId){
         return userEventsService.getUsersWithAnEvent(eventId);
     }
+
+
+
+
+    @GetMapping("/eventsfollowed/{id}")
+    public List<EventsFollowedByAUser> getEventsFollowedByAUser(@PathVariable("id") Long userId){
+        return userEventsService.getEventsForUser(userId);
+    }
+
+
+
 }
