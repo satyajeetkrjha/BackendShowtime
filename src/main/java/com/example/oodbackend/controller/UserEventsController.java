@@ -2,6 +2,8 @@ package com.example.oodbackend.controller;
 
 
 import com.example.oodbackend.dto.InterestedRequest;
+import com.example.oodbackend.dto.UserCategoryResponse;
+import com.example.oodbackend.dto.UserEventsResponse;
 import com.example.oodbackend.service.UserEventsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -28,5 +32,10 @@ public class UserEventsController {
         userEventsService.saveUserWithEvents(interestedRequest.getUserId(),interestedRequest.getEventId());
         return new ResponseEntity<>("Event marked interested by User",
                 OK);
+    }
+
+    @GetMapping("/interested/{id}")
+    public List<UserEventsResponse> getUserByEvent(@PathVariable("id") Long  eventId){
+        return userEventsService.getUsersWithAnEvent(eventId);
     }
 }

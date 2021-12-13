@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name="events")
 public class Events {
 
     @Id
@@ -42,7 +43,7 @@ public class Events {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "events", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
 
