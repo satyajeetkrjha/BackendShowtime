@@ -1,10 +1,7 @@
 package com.example.oodbackend.controller;
 
 
-import com.example.oodbackend.dto.EventsFollowedByAUser;
-import com.example.oodbackend.dto.InterestedRequest;
-import com.example.oodbackend.dto.UserCategoryResponse;
-import com.example.oodbackend.dto.UserEventsResponse;
+import com.example.oodbackend.dto.*;
 import com.example.oodbackend.service.UserEventsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +44,16 @@ public class UserEventsController {
     public List<EventsFollowedByAUser> getEventsFollowedByAUser(@PathVariable("id") Long userId){
         return userEventsService.getEventsForUser(userId);
     }
+
+
+    @GetMapping("/trendingevents")
+    public List <TrendingEvents> getTrendingEvents(){
+        return userEventsService.getTrendingEvents();
+
+
+    }
+
+
 
 
 

@@ -2,7 +2,7 @@ package com.example.oodbackend.service;
 
 
 import com.example.oodbackend.dto.EventsFollowedByAUser;
-import com.example.oodbackend.dto.UserCategoryResponse;
+import com.example.oodbackend.dto.TrendingEvents;
 import com.example.oodbackend.dto.UserEventsResponse;
 import com.example.oodbackend.repository.EventsRepository;
 import com.example.oodbackend.repository.UserRepository;
@@ -63,6 +63,28 @@ public class UserEventsService {
             eventsFollowedByAUser.setEventDescription(event.getEventName());
             res.add(eventsFollowedByAUser);
 
+        }
+        return res ;
+
+    }
+
+    public List<TrendingEvents> getTrendingEvents() {
+        List<Events> events  = eventsRepository.findAll();
+        List <TrendingEvents> res = new ArrayList<>();
+
+        for( Events e: events){
+
+            int totalUsers = e.getUsers().size();
+            if(totalUsers >2){
+                TrendingEvents trendingEvents = new TrendingEvents();
+                trendingEvents.setTotalUsers(totalUsers);
+                trendingEvents.setEndDate(e.getEventEndDate());
+                trendingEvents.setEventName(e.getEventName());
+                trendingEvents.setEventId(e.getEventId());
+                trendingEvents.setStartDate(e.getEventStartDate());
+                res.add(trendingEvents);
+
+            }
         }
         return res ;
 
