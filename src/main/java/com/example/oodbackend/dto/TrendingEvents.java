@@ -17,4 +17,5 @@ public class TrendingEvents {
     Date startDate ;
     Date endDate;
     private int totalUsers;
+    private String eventCategory;
 }
