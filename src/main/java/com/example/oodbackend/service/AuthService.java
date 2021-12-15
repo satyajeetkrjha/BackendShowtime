@@ -1,42 +1,65 @@
-
 package com.example.oodbackend.service;
 
+import com.example.oodbackend.Security.JwtProvider;
+import com.example.oodbackend.dto.*;
 
-import com.example.oodbackend.dto.RegisterRequest;
+import static java.time.Instant.now;
+
+import com.example.oodbackend.entity.NotificationEmail;
+import com.example.oodbackend.entity.VerificationToken;
+import com.example.oodbackend.exceptions.SpringBootException;
 import com.example.oodbackend.repository.UserRepository;
-import com.example.oodbackend.service.LocationService;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.example.oodbackend.repository.VerificationTokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.oodbackend.entity.User;
 import com.example.oodbackend.entity.Location;
-import static java.time.Instant.now;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.oodbackend.Security.JwtProvider;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 
 @Service
 public class AuthService {
 
     @Autowired
-    private  UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+
+    @Autowired
+    private  JwtProvider jwtProvider;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
 
         User user = new User();
+        user.setUsername(registerRequest.getUsername());
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
         user.setEmail(registerRequest.getEmail());
@@ -44,7 +67,72 @@ public class AuthService {
         user.setCreatedAt(now());
         user.setStatus(false);
         Location location = locationService.fetchLocationById(registerRequest.getLocationId());
+        user.setLocation(location);
         userRepository.save(user);
 
+        String token = generateVerificationToken(user);
+        mailService.sendMail(new NotificationEmail("Please Activate your Account",
+                user.getEmail(), "Thank you for signing up to Spring Reddit, " +
+                "please click on the below url to activate your account : " +
+                "http://localhost:8080/api/auth/accountVerification/" + token));
+
+    }
+    private String generateVerificationToken(User user) {
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+
+        verificationTokenRepository.save(verificationToken);
+        return token;
+    }
+    private void fetchUserAndEnable(VerificationToken verificationToken) {
+        Long userId = verificationToken.getUser().getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new SpringBootException("User not found with name - " + userId));
+        user.setStatus(true);
+        userRepository.save(user);
+    }
+
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        fetchUserAndEnable(verificationToken.orElseThrow(() -> new SpringBootException("Invalid Token")));
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String token = jwtProvider.generateToken(authenticate);
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
+
+    }
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
+    }
+
+
+    public UserDataResponse getUserDataByUserName(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userOptional
+                .orElseThrow(() -> new UsernameNotFoundException("No user " +
+                        "Found with username : " + username));
+        UserDataResponse userDataResponse = new UserDataResponse();
+        userDataResponse.setUserId(userOptional.get().getUserId());
+        userDataResponse.setLastName(userOptional.get().getLastName());
+        userDataResponse.setFirstName(userOptional.get().getFirstName());
+        userDataResponse.setLocationId(userOptional.get().getLocation().getLocationId());
+        return userDataResponse;
     }
 }

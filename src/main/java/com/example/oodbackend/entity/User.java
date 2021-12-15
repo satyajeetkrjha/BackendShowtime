@@ -2,6 +2,7 @@ package com.example.oodbackend.entity;
 
 import javax.persistence.*;
 
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.GeneratedValue;
@@ -9,14 +10,28 @@ import javax.persistence.GenerationType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+import com.example.oodbackend.entity.Categories;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
+
+
+
+
+   @NotBlank(message = "username can't be blank")
+    private String username;
 
     private String firstName;
 
@@ -24,6 +39,7 @@ public class User {
 
     @Email
     @NotEmpty(message = "Email is required")
+    @Column(unique=true)
     private String email;
 
     @NotBlank(message = "Password is required")
@@ -34,12 +50,50 @@ public class User {
     private boolean status ; // enable or disbaled status
 
     // Each user is going to be mapped to a Location
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "location_id",
             referencedColumnName = "locationId"
     )
+    @NotNull
     private Location location ;
+
+
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_categories",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "userId",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "category_id", referencedColumnName = "categoryId",
+                            nullable = false, updatable = false)})
+    private Set <Categories> categories = new HashSet<>();
+
+
+
+
+    //users mapped with events they mark interested
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_events",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "userId",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "event_id", referencedColumnName = "eventId",
+                            nullable = false, updatable = false)})
+    private Set <Events> events = new HashSet<>();
+
+
+
+
+
+
+
 
 
     public Long getUserId() {

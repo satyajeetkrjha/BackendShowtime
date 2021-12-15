@@ -1,15 +1,22 @@
 package com.example.oodbackend.entity;
 
 
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
+@Data
+@AllArgsConstructor
 @Entity
+@Table(name="categories")
 public class Categories {
 
     @Id
@@ -24,6 +31,11 @@ public class Categories {
 
     @Length(max=500,min=2)
     private String categoryDescription;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    private Set<User> users = new HashSet<>();
 
     public Categories() {
 
